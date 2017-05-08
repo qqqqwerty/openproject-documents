@@ -30,15 +30,23 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<h4 class="document-category-elements--header"><%= link_to h(document.title), :controller => '/documents', :action => 'show', :id => document %></h4>
-<p class="document-category-elements--date"><em><%= format_time(document.updated_on) %></em></p>
-
-<div class="wiki">
-	<%= format_text(truncate_lines(document.description)) %>
-</div>
+<tr id="document-<%= document_table %>">
+    <td>
+        <%= link_to h(document_table.project.name), :controller => '/projects', :action => 'show', :id => document_table.project_id %>
+    </td>
+    <td class="document-category-elements--header">
+        <%= link_to h(document_table.title), :controller => '/documents', :action => 'show', :id => document_table %>
+    </td>
+    <td class="document-category-elements--date">
+        <em><%= format_time(document_table.updated_on) %></em>
+    </td>
+    <td class="wiki">
+        <%= format_text(truncate_lines(document_table.description)) %>
+    </td>
+</tr>
 <% 
-  if (document.attachments.count > 0) %>
-    <%= link_to_attachments document %>
+  if (document_table.attachments.count > 0) %>
+    <tr><th colspan="4"><%= link_to_attachments document_table %></td></tr>
 <% else %>
-  <font color="red">Nëra prisegtø failø</font>
+    <tr><th colspan="4"><font color="red">NÄ—ra prisegtÅ³ failÅ³</font></th></tr>
 <% end %>

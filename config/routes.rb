@@ -38,5 +38,8 @@ OpenProject::Application.routes.draw do
     member do
       post 'add_attachment'
     end
+    collection do
+      get "all", action: :indexall
+    end
   end
 end

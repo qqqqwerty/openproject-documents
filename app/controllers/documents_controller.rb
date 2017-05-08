@@ -34,14 +34,31 @@ class DocumentsController < ApplicationController
   default_search_scope :documents
   model_object Document
   before_action :find_project_by_project_id, only: [:index, :new, :create]
-  before_action :find_model_object, except: [:index, :new, :create]
-  before_action :find_project_from_association, except: [:index, :new, :create]
-  before_action :authorize
+  before_action :find_model_object, except: [:index, :indexall, :new, :create]
+  before_action :find_project_from_association, except: [:index, :indexall, :new, :create]
+  before_action :authorize, except: [:indexall]
+  before_action :require_admin, only: [:indexall]
 
 
   def index
     @sort_by = %w(category date title author).include?(params[:sort_by]) ? params[:sort_by] : 'category'
     documents = @project.documents
+    case @sort_by
+    when 'date'
+      @grouped = documents.group_by {|d| d.updated_on.to_date }
+    when 'title'
+      @grouped = documents.group_by {|d| d.title.first.upcase}
+    when 'author'
+      @grouped = documents.with_attachments.group_by {|d| d.attachments.last.author}
+    else
+      @grouped = documents.includes(:category).group_by(&:category)
+    end
+    render layout: false if request.xhr?
+  end
+  
+  def indexall
+    @sort_by = %w(category date title author).include?(params[:sort_by]) ? params[:sort_by] : 'category'
+    documents = Document.all
     case @sort_by
     when 'date'
       @grouped = documents.group_by {|d| d.updated_on.to_date }

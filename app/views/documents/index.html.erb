@@ -52,10 +52,50 @@ See doc/COPYRIGHT.rdoc for more details.
 
 <% @grouped.keys.sort.each do |group| %>
   <collapsible-section initially-expanded="true"
-                       section-title="<%= group %>">
-    <div class="document-category--inner-section">
-      <div class="form--field document-category-elements">
-        <%= render :partial => 'documents/document', :collection => @grouped[group] %>
+                       section-title="<%= group %>"><div class="generic-table--container">
+          <div class="generic-table--results-container">
+              <table interactive-table class="generic-table" id="documents">
+                  <colgroup>
+                      <col highlight-col width="20%">
+                      <col highlight-col width="20%">
+                      <col highlight-col width="20%">
+                      <col highlight-col width="40%">
+                  </colgroup>
+                  <thead>
+                      <tr>
+                          <th>
+                              <div class="generic-table--sort-header-outer">
+                                  <div class="generic-table--sort-header">
+                                      <span>
+                                          <%= I18n.t(:label_title) %>
+                                      </span>
+                                  </div>
+                              </div>
+                          </th>
+                          <th>
+                              <div class="generic-table--sort-header-outer">
+                                  <div class="generic-table--sort-header">
+                                      <span>
+                                          <%= I18n.t(:label_last_time_modified) %>
+                                      </span>
+                                  </div>
+                              </div>
+                          </th>
+                          <th>
+                              <div class="generic-table--sort-header-outer">
+                                  <div class="generic-table--sort-header">
+                                      <span>
+                                          <%= I18n.t(:label_description) %>
+                                      </span>
+                                  </div>
+                              </div>
+                          </th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <%= render :partial => 'documents/document_table_short', :collection => @grouped[group] %>
+                  </tbody>
+              </table>
       </div>
     </div>
   </collapsible-section>

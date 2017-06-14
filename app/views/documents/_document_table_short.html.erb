@@ -30,15 +30,20 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<h3 class="document-category-elements--header"><%= link_to h(document.title), :controller => '/documents', :action => 'show', :id => document %></h3>
-<p class="document-category-elements--date"><em><%= format_time(document.updated_on) %></em></p>
-
-<div class="wiki">
-        <%= format_text(truncate_lines(document.description)) %>
-</div>
+<tr id="document-<%= document_table_short %>">
+    <td class="document-category-elements--header">
+        <%= link_to h(document_table_short.title), :controller => '/documents', :action => 'show', :id => document_table_short %>
+    </td>
+    <td class="document-category-elements--date">
+        <em><%= format_time(document_table_short.updated_on) %></em>
+    </td>
+    <td class="wiki">
+        <%= format_text(truncate_lines(document_table_short.description)) %>
+    </td>
+</tr>
 <% 
-  if (document.attachments.count > 0) %>
-    <%= link_to_attachments document %>
+  if (document_table_short.attachments.count > 0) %>
+    <tr><th colspan="3"><%= link_to_attachments document_table_short %></td></tr>
 <% else %>
-  <font color="red"><%= I18n.t(:label_no_attachments_exist) %></font>
+    <tr><th colspan="3"><font color="red"><%= I18n.t(:label_no_attachments_exist) %></font></th></tr>
 <% end %>

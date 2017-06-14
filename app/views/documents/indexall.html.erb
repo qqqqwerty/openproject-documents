@@ -39,7 +39,7 @@ See doc/COPYRIGHT.rdoc for more details.
   <%= no_results_box %>
 <% end %>
 
-
+<% Rails.logger.warn(@grouped.inspect) %>
 <% @grouped.keys.sort.each do |group| %>
   <collapsible-section initially-expanded="true"
                        section-title="<%= group %>">
@@ -58,7 +58,7 @@ See doc/COPYRIGHT.rdoc for more details.
                               <div class="generic-table--sort-header-outer">
                                   <div class="generic-table--sort-header">
                                       <span>
-                                          Projektas
+                                          <%= I18n.t(:label_project) %>
                                       </span>
                                   </div>
                               </div>
@@ -67,7 +67,7 @@ See doc/COPYRIGHT.rdoc for more details.
                               <div class="generic-table--sort-header-outer">
                                   <div class="generic-table--sort-header">
                                       <span>
-                                          Pavadinimas
+                                          <%= I18n.t(:label_title) %>
                                       </span>
                                   </div>
                               </div>
@@ -76,7 +76,7 @@ See doc/COPYRIGHT.rdoc for more details.
                               <div class="generic-table--sort-header-outer">
                                   <div class="generic-table--sort-header">
                                       <span>
-                                          Atnaujinta
+                                          <%= I18n.t(:label_last_time_modified) %>
                                       </span>
                                   </div>
                               </div>
@@ -85,7 +85,7 @@ See doc/COPYRIGHT.rdoc for more details.
                               <div class="generic-table--sort-header-outer">
                                   <div class="generic-table--sort-header">
                                       <span>
-                                          Turinys
+                                          <%= I18n.t(:label_description) %>
                                       </span>
                                   </div>
                               </div>
@@ -97,14 +97,16 @@ See doc/COPYRIGHT.rdoc for more details.
                       <div class="form--field document-category-elements">
                           <%= render :partial => 'documents/document_table', :collection => @grouped[group] %>
                       </div>
-                  </div>
-                  <%#*</tbody>%>
+                  <%#*</div>%>
+                  </tbody>
               </table>
               <div class="generic-table--header-background"></div>
           </div>  
       </div>
   </collapsible-section>
 <% end %>
+
+<%= pagination_links_full @documents %>
 
 <% content_for :sidebar do %>
   <%= form_tag({}, :method => :get, class: 'sidebar--document-sort') do %>

@@ -44,10 +44,9 @@ module OpenProject::Documents
                           { controller: '/documents', action: 'indexall' },
                           after: :projects,
                           caption: :label_document_plural,
-                          html: { class: 'icon2 icon-notes' },
-						  if: Proc.new {
-							(User.current.admin?)
-						  }
+                          if: Proc.new {
+                            (User.current.admin?)
+                          }
       
       menu :project_menu, :documents,
                           { controller: '/documents', action: 'index' },

@@ -31,6 +31,7 @@
 #++
 
 class Document < ActiveRecord::Base
+  extend Pagination::Model
   belongs_to :project
   belongs_to :category, class_name: "DocumentCategory", foreign_key: "category_id"
   acts_as_attachable delete_permission: :manage_documents
@@ -47,7 +48,7 @@ class Document < ActiveRecord::Base
   acts_as_searchable columns: ['title', "#{table_name}.description"],
                      include: :project,
                      references: :projects
-
+  
   validates_presence_of :project, :title, :category
   validates_length_of :title, maximum: 60
 
@@ -61,6 +62,37 @@ class Document < ActiveRecord::Base
     includes(:attachments)
       .where('attachments.container_id is not NULL')
       .references(:attachments)
+  }
+  
+  scope :with_attachments_sorted, lambda { |*args|
+    result = nil
+    if args[0]
+      subquery = Attachment.select('`container_id`,
+                                   MAX(`created_on`) `updated_on`,
+                                   `author_id`')
+                           .group(:container_id, :author_id)
+                           .to_sql
+      result = Document.select('`documents`.*')
+                       .joins("LEFT JOIN (#{subquery}) `attachments`
+                               ON `documents`.`id` = `attachments`.`container_id`")
+                       .order(args[0].to_s)
+      Rails.logger.warn(result.to_sql)
+    end
+    
+    result
+  }
+  
+  scope :with_categories_sorted, lambda { |*args|
+    result = nil
+    if args[0]
+      result = Document.select('`documents`.*')
+                       .joins("LEFT JOIN `enumerations` AS `document_categories`
+                               ON `documents`.`category_id` = `document_categories`.`id`")
+                       .order(args[0].to_s)
+      Rails.logger.warn(result.to_sql)
+    end
+    
+    result
   }
 
   after_initialize :set_default_category
@@ -83,6 +115,10 @@ class Document < ActiveRecord::Base
       @updated_on = (a && a.created_on) || created_on
     end
     @updated_on
+  end
+  
+  def self.paginated_search(search, options = {})
+    paginate_scope! givable.like(search), options
   end
 
   private

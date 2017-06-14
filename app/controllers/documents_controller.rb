@@ -31,6 +31,7 @@
 #++
 
 class DocumentsController < ApplicationController
+  include PaginationHelper
   default_search_scope :documents
   model_object Document
   before_action :find_project_by_project_id, only: [:index, :new, :create]
@@ -58,17 +59,31 @@ class DocumentsController < ApplicationController
   
   def indexall
     @sort_by = %w(category date title author).include?(params[:sort_by]) ? params[:sort_by] : 'category'
-    documents = Document.all
+    @documents = nil
     case @sort_by
     when 'date'
-      @grouped = documents.group_by {|d| d.updated_on.to_date }
+      @documents = Document.with_attachments_sorted('COALESCE(updated_on, documents.created_on)')
+                            .page(page_param)
+                            .per_page(per_page_param)
+      @grouped = @documents.group_by {|d| d.updated_on.to_date }
     when 'title'
-      @grouped = documents.group_by {|d| d.title.first.upcase}
+      @documents = Document.with_attachments_sorted('title')
+                            .page(page_param)
+                            .per_page(per_page_param)
+      @grouped = @documents.group_by {|d| d.title.first.upcase}
     when 'author'
-      @grouped = documents.with_attachments.group_by {|d| d.attachments.last.author}
+      @documents = Document.with_attachments_sorted('author_id')
+                            .with_attachments
+                            .page(page_param)
+                            .per_page(per_page_param)
+      @grouped = @documents.group_by {|d| d.attachments.last.author}
     else
-      @grouped = documents.includes(:category).group_by(&:category)
+      @documents = Document.with_categories_sorted('position')
+                            .page(page_param)
+                            .per_page(per_page_param)
+      @grouped = @documents.includes(:category).group_by(&:category)
     end
+    Rails.logger.warn(@documents.inspect)
     render layout: false if request.xhr?
   end
 

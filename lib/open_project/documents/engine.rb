@@ -39,7 +39,15 @@ module OpenProject::Documents
     register 'openproject-documents',
              author_url: "http://www.openproject.com",
              requires_openproject: ">= 4.0.0" do
-
+      
+      menu :top_menu, :documents,
+                          { controller: '/documents', action: 'indexall' },
+                          after: :projects,
+                          caption: :label_document_plural,
+                          if: Proc.new {
+                            (User.current.admin?)
+                          }
+      
       menu :project_menu, :documents,
                           { controller: '/documents', action: 'index' },
                           param: :project_id,

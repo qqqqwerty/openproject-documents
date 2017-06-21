@@ -52,3 +52,8 @@ en:
   permission_manage_documents: "Manage documents"
   permission_view_documents: "View documents"
   project_module_documents: "Documents"
+  label_no_attachments_exist: "Nėra prisegtų failų"
+  label_project: "Projektas"
+  label_title: "Pavadinimas"
+  label_last_time_modified: "Atnaujinta"
+  label_description: "Aprašymas"

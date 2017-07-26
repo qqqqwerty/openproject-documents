@@ -76,7 +76,6 @@ class Document < ActiveRecord::Base
                        .joins("LEFT JOIN (#{subquery}) `attachments`
                                ON `documents`.`id` = `attachments`.`container_id`")
                        .order(args[0].to_s)
-      Rails.logger.warn(result.to_sql)
     end
     
     result
@@ -89,7 +88,6 @@ class Document < ActiveRecord::Base
                        .joins("LEFT JOIN `enumerations` AS `document_categories`
                                ON `documents`.`category_id` = `document_categories`.`id`")
                        .order(args[0].to_s)
-      Rails.logger.warn(result.to_sql)
     end
     
     result

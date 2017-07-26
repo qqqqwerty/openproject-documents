@@ -39,7 +39,6 @@ See doc/COPYRIGHT.rdoc for more details.
   <%= no_results_box %>
 <% end %>
 
-<% Rails.logger.warn(@grouped.inspect) %>
 <% @grouped.keys.sort.each do |group| %>
   <collapsible-section initially-expanded="true"
                        section-title="<%= group %>">

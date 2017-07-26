@@ -83,7 +83,6 @@ class DocumentsController < ApplicationController
                             .per_page(per_page_param)
       @grouped = @documents.includes(:category).group_by(&:category)
     end
-    Rails.logger.warn(@documents.inspect)
     render layout: false if request.xhr?
   end
 

@@ -56,6 +56,9 @@ module OpenProject::Documents
                           icon: 'icon2 icon-notes'
 
       project_module :documents do |_map|
+        permission :add_documents, {
+          documents: [:new, :create, :edit, :update, :add_attachment]
+          }, require: :loggedin
         permission :manage_documents, {
           documents: [:new, :create, :edit, :update, :destroy, :add_attachment]
           }, require: :loggedin

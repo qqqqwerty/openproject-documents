@@ -16,4 +16,5 @@ lt:
   label_documents: "Dokumentai"
   permission_manage_documents: "Valdyti dokumentus"
   permission_view_documents: "Peržiūrėti dokumentus"
+  permission_add_documents: "Pridėti dokumentus (išskyrus naikinti)"
   project_module_documents: "Dokumentai"

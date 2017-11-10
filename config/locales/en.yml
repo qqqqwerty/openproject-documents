@@ -33,6 +33,9 @@ en:
   activerecord:
     models:
       document: "Document"
+    attributes:
+      user_preference:
+        display_attachments_preference: "Display attachments in documents page"
 
   default_doc_category_tech: "Technical documentation"
   default_doc_category_user: "User documentation"

@@ -44,9 +44,10 @@ See doc/COPYRIGHT.rdoc for more details.
         <%= format_text(truncate_lines(document_table.description)) %>
     </td>
 </tr>
-<% 
-  if (document_table.attachments.count > 0) %>
+<% if (document_table.attachments.count > 0) %>
+  <% if @display_attachments %>
     <tr><th colspan="4"><%= link_to_attachments document_table %></td></tr>
+  <% end %>
 <% else %>
     <tr><th colspan="4"><font color="red"><%= I18n.t(:label_no_attachments_exist) %></font></th></tr>
 <% end %>

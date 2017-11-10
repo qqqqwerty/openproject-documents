@@ -29,25 +29,30 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
-OpenProject::Application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: [:create, :new, :index]
-  end
+module OpenProject::Documents
+  module Patches
+    module UserPreferencePatch
+      def self.included(base) # :nodoc:
+        base.class_eval do
+          include InstanceMethods
+        end
+      end
 
-  resources :documents, except: [:create, :new, :index] do
-    member do
-      post 'add_attachment'
-    end
-    collection do
-      get "all", action: :indexall
-    end
-  end
-  scope controller: 'my' do
-    match '/my/documents_settings', action: 'documents_settings', via: [:get, :patch]
-  end
-  resources :users do
-    member do
-      put :update_documents_params
+      module InstanceMethods
+        def display_attachments_preference?
+          # Need to cast here as previous values were '0' / '1'
+          to_boolean(others.fetch(:display_attachments_preference) { true })
+        end
+
+        def display_attachments_preference
+          display_attachments_preference?
+        end
+
+        def display_attachments_preference=(value)
+          others[:display_attachments_preference] = to_boolean(value)
+        end
+        alias :display_attachments_preference :display_attachments_preference?
+      end
     end
   end
 end

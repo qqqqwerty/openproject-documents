@@ -29,25 +29,22 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
-OpenProject::Application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: [:create, :new, :index]
-  end
+module OpenProject::Documents
+  module Patches
+    module UsersHelperPatch
+      def self.included(base) # :nodoc:
+        base.send :include, InstanceMethods
+        base.class_eval do
+          alias_method_chain :user_settings_tabs, :documents unless method_defined?(:user_settings_tabs_without_documents)
+        end
+      end
 
-  resources :documents, except: [:create, :new, :index] do
-    member do
-      post 'add_attachment'
-    end
-    collection do
-      get "all", action: :indexall
-    end
-  end
-  scope controller: 'my' do
-    match '/my/documents_settings', action: 'documents_settings', via: [:get, :patch]
-  end
-  resources :users do
-    member do
-      put :update_documents_params
+      module InstanceMethods
+        def user_settings_tabs_with_documents
+          tabs = user_settings_tabs_without_documents
+          tabs << {:name => 'documents_settings', :partial => 'users/documents_settings_form', :label => :label_documents}
+        end
+      end
     end
   end
 end

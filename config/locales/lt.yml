@@ -2,6 +2,9 @@ lt:
   activerecord:
     models:
       document: "Dokumentas"
+    attributes:
+      user_preference:
+        display_attachments_preference: "Rodyti prisegtus failus peržiūrint projekto dokumentus"
   default_doc_category_tech: "Techninė dokumentacija"
   default_doc_category_user: "Vartotojo dokumentacija"
   enumeration_doc_categories: "Dokumentų kategorijos"

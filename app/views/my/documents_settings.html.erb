@@ -1,0 +1,12 @@
+<% breadcrumb_paths(l(:label_my_account), l(:label_documents)) %>
+<%= toolbar title: l(:label_documents) %>
+<% html_title l(:label_my_account), l(:label_documents) %>
+<%= error_messages_for 'documents_settings' %>
+<%= form_for @user, 
+              as: :user,
+              url: { controller: '/my', action: "documents_settings"}, 
+              lang: current_language,
+              html: { id: 'my_account_form', class: 'form -wide-labels' } do |f| %>
+  <%= render :partial => 'users/documents_settings' %>
+  <%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-checkmark' %>
+<% end %>

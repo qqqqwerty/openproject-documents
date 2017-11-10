@@ -54,6 +54,11 @@ module OpenProject::Documents
                           param: :project_id,
                           caption: :label_document_plural,
                           icon: 'icon2 icon-notes'
+                        
+      add_menu_item :my_menu, :documents_settings,
+              {controller: 'my', action: 'documents_settings'},
+              caption: :label_documents,
+              icon: 'icon2 icon-notes'
 
       project_module :documents do |_map|
         permission :add_documents, {
@@ -74,7 +79,14 @@ module OpenProject::Documents
       Redmine::Search.register :documents
     end
 
-    patches [:CustomFieldsHelper, :Project]
+    patches [:CustomFieldsHelper, 
+              :Project,
+              :UsersHelper,
+              :UserPreference,
+              :MyController,
+              :UsersController,
+              :PermittedParams,
+              ]
 
     assets %w(documents/documents.css)
 
@@ -83,6 +95,7 @@ module OpenProject::Documents
     end
 
     config.to_prepare do
+      #PermittedParams.permit(:pref, :display_attachments_preference)
       require_dependency 'document'
       require_dependency 'document_category'
       require_dependency 'document_category_custom_field'

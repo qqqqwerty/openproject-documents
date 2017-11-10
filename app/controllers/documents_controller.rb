@@ -42,6 +42,7 @@ class DocumentsController < ApplicationController
 
 
   def index
+    @display_attachments = User.current.pref.display_attachments_preference?
     @sort_by = %w(category date title author).include?(params[:sort_by]) ? params[:sort_by] : 'category'
     documents = @project.documents
     case @sort_by
@@ -58,6 +59,7 @@ class DocumentsController < ApplicationController
   end
   
   def indexall
+    @display_attachments = User.current.pref.display_attachments_preference?
     @sort_by = %w(category date title author).include?(params[:sort_by]) ? params[:sort_by] : 'category'
     @documents = nil
     case @sort_by

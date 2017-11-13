@@ -88,7 +88,10 @@ module OpenProject::Documents
               :PermittedParams,
               ]
 
-    assets %w(documents/documents.css)
+    assets %w(
+      documents/documents.css
+      documents/documents.js
+    )
 
     initializer "documents.register_hooks" do
       require 'open_project/documents/hooks'

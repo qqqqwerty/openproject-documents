@@ -98,6 +98,7 @@ class DocumentsController < ApplicationController
   end
 
   def create
+    Rails.logger.warn(params.inspect)
     @document = @project.documents.build
     @document.attributes = document_params
     if @document.save
@@ -130,7 +131,19 @@ class DocumentsController < ApplicationController
   end
 
   def add_attachment
-    attachments = Attachment.attach_files(@document, params[:attachments])
+    size = params[:multiple_attachments].length
+    form_attachments = {}
+    if (size > 0 && size <= 10)
+      i = 0;
+      params[:multiple_attachments].each do |file|
+        form_attachments[i] = {}
+        form_attachments[i]['file'] = file
+        form_attachments[i]['description'] = params[:attachments][(i+1).to_s][:description]
+        i = i + 1
+      end
+    end
+    attachments = Attachment.attach_files(@document, form_attachments)
+    #attachments = Attachment.attach_files(@document, params[:attachments])
     render_attachment_warning_if_needed(@document)
 
     if attachments.present? && attachments[:files].present? && Setting.notified_events.include?('document_added')

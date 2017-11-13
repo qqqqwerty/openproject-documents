@@ -68,7 +68,7 @@ See doc/COPYRIGHT.rdoc for more details.
   </p>
   <%= form_tag(add_attachment_document_path(@document), method: :post, multipart: true, id: "add_attachment_form", style: "display:none;") do %>
   <div class="box">
-  <p><%= render partial: 'attachments/form' %></p>
+  <p><%= render partial: 'attachments/form_for_documents' %></p>
   </div>
   <%= styled_button_tag l(:button_add), class: "-highlight -with-icon icon-checkmark" %>
 

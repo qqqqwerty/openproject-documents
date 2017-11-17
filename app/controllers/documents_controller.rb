@@ -98,11 +98,10 @@ class DocumentsController < ApplicationController
   end
 
   def create
-    Rails.logger.warn(params.inspect)
     @document = @project.documents.build
     @document.attributes = document_params
     if @document.save
-      Attachment.attach_files(@document, params[:attachments])
+      Attachment.attach_files(@document, collect_attachments_info)
       render_attachment_warning_if_needed(@document)
       flash[:notice] = l(:notice_successful_create)
       redirect_to project_documents_path(@project)
@@ -131,19 +130,7 @@ class DocumentsController < ApplicationController
   end
 
   def add_attachment
-    size = params[:multiple_attachments].length
-    form_attachments = {}
-    if (size > 0 && size <= 10)
-      i = 0;
-      params[:multiple_attachments].each do |file|
-        form_attachments[i] = {}
-        form_attachments[i]['file'] = file
-        form_attachments[i]['description'] = params[:attachments][(i+1).to_s][:description]
-        i = i + 1
-      end
-    end
-    attachments = Attachment.attach_files(@document, form_attachments)
-    #attachments = Attachment.attach_files(@document, params[:attachments])
+    attachments = Attachment.attach_files(@document, collect_attachments_info)
     render_attachment_warning_if_needed(@document)
 
     if attachments.present? && attachments[:files].present? && Setting.notified_events.include?('document_added')
@@ -159,5 +146,24 @@ class DocumentsController < ApplicationController
 
   def document_params
     params.fetch(:document, {}).permit('category_id', 'title', 'description')
+  end
+  
+  def collect_attachments_info
+    if (params[:multiple_attachments] != nil)
+      size = params[:multiple_attachments].length
+      form_attachments = {}
+      if (size > 0 && size <= 10)
+        i = 0;
+        params[:multiple_attachments].each do |file|
+          form_attachments[i] = {}
+          form_attachments[i]['file'] = file
+          form_attachments[i]['description'] = params[:attachments][(i+1).to_s][:description]
+          i = i + 1
+        end
+      end
+    else
+      form_attachments = params[:attachments]
+    end
+    form_attachments
   end
 end

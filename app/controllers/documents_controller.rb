@@ -149,17 +149,19 @@ class DocumentsController < ApplicationController
   end
   
   def collect_attachments_info
+    form_attachments = {}
     if (params[:multiple_attachments] != nil)
       size = params[:multiple_attachments].length
-      form_attachments = {}
-      if (size > 0 && size <= 10)
-        i = 0;
-        params[:multiple_attachments].each do |file|
-          form_attachments[i] = {}
-          form_attachments[i]['file'] = file
-          form_attachments[i]['description'] = params[:attachments][(i+1).to_s][:description]
-          i = i + 1
+      i = 0;
+      number_of_descriptions = params[:attachments].length
+      params[:multiple_attachments].each do |file|
+        if (i+1 > number_of_descriptions || i >= 10)
+          break;
         end
+        form_attachments[i] = {}
+        form_attachments[i]['file'] = file
+        form_attachments[i]['description'] = params[:attachments][(i+1).to_s][:description]
+        i = i + 1
       end
     else
       form_attachments = params[:attachments]

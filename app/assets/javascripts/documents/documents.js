@@ -10,11 +10,11 @@ function documentAttachmentsFieldsControl(obj) {
     try {
         var files = obj.files;
         var len = files.length;
-
         if (len > 0) {
           var active_row = document.getElementById("attachments[1][file_name]");
           active_row.textContent = files[0].name;
-          for (i = 1; i < len && i < 10; i++) {
+          for (i = 1; i <= len && i < 10; i++) {
+            console.log("i = " + i + ", len " + len);
             addFileField();
             active_row = document.getElementById("attachments[" + (i+1) + "][file_name]");
             active_row.textContent = files[i].name;
